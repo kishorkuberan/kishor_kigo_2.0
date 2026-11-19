@@ -82,15 +82,26 @@ gradle :app:assembleRelease
 
 ---
 
-## Publish via GitHub (Free Web Hosting + Automated APK Build)
+## Publish on Vercel and Build Android APK
 
-This repository includes pre-configured GitHub Actions workflows in `.github/workflows/`:
+This repository is configured for a static Vercel deployment and an automated Android APK build.
 
-1. **Push from AI Studio**: Click **Save / Push to GitHub** in AI Studio to push this repository to your GitHub account.
-2. **Publish Live Web App (GitHub Pages)**:
-   - Open your GitHub repository → **Settings** → **Pages**.
-   - Under **Build and deployment → Source**, choose **GitHub Actions** (or **Deploy from a branch** → `main` / `/ (root)`).
-   - Once deployed, add `your-username.github.io` in **Firebase Console → Authentication → Settings → Authorized domains** and paste your Firebase Web Config (`apiKey`, `appId`) into the **Firebase Setup** button inside `index.html`.
-3. **Download Built Android APK**:
-   - Open the **Actions** tab in your GitHub repository → select **Build KIGO CHAT Android APK** → download the `KIGO-CHAT-debug-apk` artifact.
+1. **Deploy the web app on Vercel**:
+   - Import `kishorkuberan/kishor_kigo_2.0` from GitHub.
+   - Use the repository root (the existing `index.html` is at the root); no framework or build command is required.
+   - After Vercel assigns a hostname, add that hostname under Firebase Console → Authentication → Settings → Authorized domains.
 
+2. **Enable Firebase sign-in**:
+   - In Firebase Console → Authentication → Sign-in method, enable Google and Email/Password.
+   - Confirm the Google provider is configured for the `kigo-chat-256bf` project.
+   - Add the Android debug SHA-1 and SHA-256 fingerprints from the build artifact under Project settings → Your apps → Android app.
+
+3. **Download the Android APK**:
+   - Open the repository's Actions tab → select the latest **Build KIGO CHAT Android APK** run.
+   - Download the `KIGO-CHAT-debug-apk` artifact and extract it.
+   - It contains `app-debug.apk` and `firebase-debug-certificate.txt`.
+
+4. **Publish Firestore rules**:
+   - Publish `firestore.rules` to the `(default)` database in Firebase Console, or run `firebase deploy --only firestore:rules` after selecting project `kigo-chat-256bf`.
+
+The debug APK is for installation/testing. A release APK or Play Store AAB requires a private release signing key configured securely by the app owner.
