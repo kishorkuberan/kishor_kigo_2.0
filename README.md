@@ -41,12 +41,14 @@ KIGO CHAT is a real-time Android messaging application built with Kotlin, Jetpac
 
 ## Firebase Provisioning & Schema
 
-- **Firebase Project**: `gen-lang-client-0870993560`
-- **Firestore Database ID**: Configured in `app/src/main/res/values/firebase_applet_config.xml` (`ai-studio-android-kigochat-aa390241-e7c4-4171-8338-1082dd015050`)
+- **Firebase Project**: `kigo-chat-256bf` (matches the supplied `app/google-services.json`)
+- **Firestore Database ID**: `(default)`
+- **Android package**: `com.kigo.chat`
+- **Web auth domain**: `kigo-chat-256bf.firebaseapp.com`
 - **Schema & Rules**: Defined in `/firebase-blueprint.json` and `/firestore.rules`.
 
 ### Optional Firebase Console Upgrades
-Google Sign-In and Cloud Firestore are provisioned out of the box. To expand into multi-megabyte media buckets, Email/Password sign-in, and push notifications outside the app:
+Firebase client configuration is included for project `kigo-chat-256bf`. Before testing sign-in, verify the following in Firebase Console: enable Google and Email/Password providers under Authentication; add the app's debug SHA-1 and SHA-256 fingerprints under Project settings → Your apps → Android app; add the deployed web hostname under Authentication → Settings → Authorized domains. The debug fingerprints are attached to the `KIGO-CHAT-debug-apk` build artifact as `firebase-debug-certificate.txt`. The Firestore rules are in `firestore.rules`; publish them to the `(default)` database from Firebase Console or with the Firebase CLI. To expand into multi-megabyte media buckets and push notifications outside the app:
 1. **Enable Email/Password Auth**: Firebase Console → Authentication → Sign-in method → Enable *Email/Password* (and configure password reset templates).
 2. **Enable Firebase Storage**: Firebase Console → Storage → Create bucket for >420 KB videos/PDFs and lock rules to `request.auth != null`.
 3. **Enable Firebase Cloud Messaging (FCM)**: Add `firebase-messaging` dependency and a `FirebaseMessagingService` to deliver background push notifications when the app is closed.
