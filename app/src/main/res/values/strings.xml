@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">KIGO CHAT</string>
+    <string name="tagline">Connect Freely. Chat Your Way.</string>
+    <string name="version_label">Version 1.0</string>
+    <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="register_with_google">Create Account with Google</string>
+</resources>

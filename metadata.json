@@ -1,0 +1,6 @@
+{
+  "name": "KIGO CHAT",
+  "description": "Connect Freely. Chat Your Way. Real-time messaging, friend discovery via KIGO ID, groups, voice & media sharing, and live theme customisation.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,333 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Public non-PII KIGO CHAT user profile with unique KIGO ID and ECDH public key.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "Firebase Auth UID" },
+        "kigoId": { "type": "string", "description": "Unique permanent KIGO-XXXXXX identifier" },
+        "username": { "type": "string", "description": "Unique searchable handle" },
+        "displayName": { "type": "string", "description": "User display name" },
+        "about": { "type": "string", "description": "About bio" },
+        "customStatus": { "type": "string", "description": "Custom status text" },
+        "photoUrl": { "type": "string", "description": "Profile image URL or encoded avatar" },
+        "online": { "type": "boolean", "description": "Real-time online presence" },
+        "lastSeen": { "type": "string", "format": "date-time", "description": "Server timestamp of last activity" },
+        "publicKeyBase64": { "type": "string", "description": "Base64 X.509 ECDH P-256 public key for E2EE" },
+        "showOnlineStatus": { "type": "boolean" },
+        "showLastSeen": { "type": "boolean" },
+        "showReadReceipts": { "type": "boolean" },
+        "allowFriendRequests": { "type": "boolean" },
+        "allowDiscovery": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server timestamp" },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Server timestamp" }
+      },
+      "required": ["userId", "kigoId", "username", "displayName", "createdAt", "updatedAt"]
+    },
+    "UserPrivateAccount": {
+      "title": "UserPrivateAccount",
+      "description": "Owner-only isolated PII and account metadata.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "email": { "type": "string" },
+        "accountStatus": { "type": "string" },
+        "dataExportRequestedAt": { "type": "string", "format": "date-time" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "updatedAt"]
+    },
+    "UsernameRecord": {
+      "title": "UsernameRecord",
+      "description": "Unique username index for collision-free discovery.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "username": { "type": "string" },
+        "displayName": { "type": "string" },
+        "kigoId": { "type": "string" },
+        "photoUrl": { "type": "string" },
+        "allowDiscovery": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "username", "displayName", "kigoId", "allowDiscovery", "createdAt", "updatedAt"]
+    },
+    "KigoIdRecord": {
+      "title": "KigoIdRecord",
+      "description": "Unique permanent KIGO ID index guaranteed via transaction.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "kigoId": { "type": "string" },
+        "username": { "type": "string" },
+        "displayName": { "type": "string" },
+        "photoUrl": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "kigoId", "username", "displayName", "createdAt", "updatedAt"]
+    },
+    "FriendRequest": {
+      "title": "FriendRequest",
+      "description": "Friend request between two authenticated users.",
+      "type": "object",
+      "properties": {
+        "fromUserId": { "type": "string" },
+        "toUserId": { "type": "string" },
+        "fromDisplayName": { "type": "string" },
+        "fromKigoId": { "type": "string" },
+        "fromPhotoUrl": { "type": "string" },
+        "toDisplayName": { "type": "string" },
+        "toKigoId": { "type": "string" },
+        "participantIds": { "type": "array" },
+        "status": { "type": "string", "enum": ["pending", "accepted", "rejected", "cancelled"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["fromUserId", "toUserId", "participantIds", "status", "createdAt", "updatedAt"]
+    },
+    "Friendship": {
+      "title": "Friendship",
+      "description": "Confirmed bidirectional friendship.",
+      "type": "object",
+      "properties": {
+        "participantIds": { "type": "array" },
+        "userAId": { "type": "string" },
+        "userADisplayName": { "type": "string" },
+        "userAKigoId": { "type": "string" },
+        "userAPhotoUrl": { "type": "string" },
+        "userBId": { "type": "string" },
+        "userBDisplayName": { "type": "string" },
+        "userBKigoId": { "type": "string" },
+        "userBPhotoUrl": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["participantIds", "userAId", "userBId", "createdAt"]
+    },
+    "Conversation": {
+      "title": "Conversation",
+      "description": "Direct or group conversation thread metadata.",
+      "type": "object",
+      "properties": {
+        "type": { "type": "string", "enum": ["direct", "group"] },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "photoUrl": { "type": "string" },
+        "participantIds": { "type": "array" },
+        "adminIds": { "type": "array" },
+        "createdBy": { "type": "string" },
+        "lastMessagePreview": { "type": "string" },
+        "lastMessageType": { "type": "string" },
+        "lastMessageSenderId": { "type": "string" },
+        "lastMessageAt": { "type": "string", "format": "date-time" },
+        "unreadCounts": { "type": "object" },
+        "archivedBy": { "type": "array" },
+        "typingUsers": { "type": "object" },
+        "isEncrypted": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["type", "participantIds", "createdBy", "createdAt", "updatedAt"]
+    },
+    "Message": {
+      "title": "Message",
+      "description": "Real-time message in a conversation with E2EE payload support.",
+      "type": "object",
+      "properties": {
+        "conversationId": { "type": "string" },
+        "senderId": { "type": "string" },
+        "senderName": { "type": "string" },
+        "participantIds": { "type": "array" },
+        "type": { "type": "string", "enum": ["text", "image", "video", "document", "voice", "location", "system"] },
+        "text": { "type": "string" },
+        "ciphertext": { "type": "string" },
+        "ivBase64": { "type": "string" },
+        "isEncrypted": { "type": "boolean" },
+        "mediaDataBase64": { "type": "string" },
+        "mediaName": { "type": "string" },
+        "mediaMimeType": { "type": "string" },
+        "mediaSizeBytes": { "type": "integer" },
+        "mediaDurationMs": { "type": "integer" },
+        "locationLat": { "type": "number" },
+        "locationLng": { "type": "number" },
+        "locationLabel": { "type": "string" },
+        "replyToMessageId": { "type": "string" },
+        "replyToPreview": { "type": "string" },
+        "forwardedFrom": { "type": "string" },
+        "edited": { "type": "boolean" },
+        "deleted": { "type": "boolean" },
+        "readBy": { "type": "array" },
+        "deliveredTo": { "type": "array" },
+        "reactions": { "type": "object" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["conversationId", "senderId", "participantIds", "type", "createdAt", "updatedAt"]
+    },
+    "Group": {
+      "title": "Group",
+      "description": "Group chat metadata linked to a conversation.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "photoUrl": { "type": "string" },
+        "conversationId": { "type": "string" },
+        "createdBy": { "type": "string" },
+        "adminIds": { "type": "array" },
+        "memberIds": { "type": "array" },
+        "isPrivate": { "type": "boolean" },
+        "requireAdminApproval": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "conversationId", "createdBy", "adminIds", "memberIds", "createdAt", "updatedAt"]
+    },
+    "GroupMember": {
+      "title": "GroupMember",
+      "description": "Group membership entry with role.",
+      "type": "object",
+      "properties": {
+        "groupId": { "type": "string" },
+        "userId": { "type": "string" },
+        "displayName": { "type": "string" },
+        "kigoId": { "type": "string" },
+        "photoUrl": { "type": "string" },
+        "role": { "type": "string", "enum": ["admin", "member"] },
+        "memberIds": { "type": "array" },
+        "joinedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["groupId", "userId", "displayName", "role", "memberIds", "joinedAt"]
+    },
+    "NotificationItem": {
+      "title": "NotificationItem",
+      "description": "In-app synced notification entry.",
+      "type": "object",
+      "properties": {
+        "recipientId": { "type": "string" },
+        "senderId": { "type": "string" },
+        "senderName": { "type": "string" },
+        "type": { "type": "string", "enum": ["message", "friend_request", "friend_accepted", "group_invite", "mention", "system"] },
+        "title": { "type": "string" },
+        "body": { "type": "string" },
+        "targetId": { "type": "string" },
+        "read": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["recipientId", "senderId", "type", "title", "body", "read", "createdAt"]
+    },
+    "UserSettings": {
+      "title": "UserSettings",
+      "description": "Customisation studio and notification preferences persisted per user.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "themeMode": { "type": "string", "enum": ["light", "dark", "amoled"] },
+        "accentPreset": { "type": "string", "enum": ["cyan", "violet", "emerald", "amber", "rose"] },
+        "bubbleColorHex": { "type": "string" },
+        "fontStyle": { "type": "string", "enum": ["jakarta", "grotesk", "mono", "system"] },
+        "fontScale": { "type": "string", "enum": ["compact", "standard", "large", "xlarge"] },
+        "messageLayout": { "type": "string", "enum": ["modern", "classic", "compact"] },
+        "navigationStyle": { "type": "string", "enum": ["docked", "floating"] },
+        "profileTheme": { "type": "string", "enum": ["aurora", "obsidian", "minimal", "cyber"] },
+        "chatWallpaper": { "type": "string", "enum": ["none", "aurora", "grid", "midnight"] },
+        "notificationSound": { "type": "string", "enum": ["pulse", "chime", "crystal", "silent"] },
+        "notifyMessages": { "type": "boolean" },
+        "notifyFriendRequests": { "type": "boolean" },
+        "notifyGroups": { "type": "boolean" },
+        "notifyMentions": { "type": "boolean" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "themeMode", "updatedAt"]
+    },
+    "BlockedUser": {
+      "title": "BlockedUser",
+      "description": "User block record.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "blockedUserId": { "type": "string" },
+        "blockedDisplayName": { "type": "string" },
+        "blockedKigoId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "blockedUserId", "createdAt"]
+    },
+    "UserReport": {
+      "title": "UserReport",
+      "description": "Abuse/spam report submitted by a user.",
+      "type": "object",
+      "properties": {
+        "reporterId": { "type": "string" },
+        "reportedUserId": { "type": "string" },
+        "reportedMessageId": { "type": "string" },
+        "reason": { "type": "string" },
+        "details": { "type": "string" },
+        "status": { "type": "string", "enum": ["open"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["reporterId", "reportedUserId", "reason", "status", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "Public chat profiles keyed by Firebase UID."
+    },
+    "/users/{userId}/private/{docId}": {
+      "schema": { "$ref": "#/entities/UserPrivateAccount" },
+      "description": "Owner-only PII and account control document."
+    },
+    "/usernames/{usernameKey}": {
+      "schema": { "$ref": "#/entities/UsernameRecord" },
+      "description": "Unique username lookup registry."
+    },
+    "/kigoIds/{kigoId}": {
+      "schema": { "$ref": "#/entities/KigoIdRecord" },
+      "description": "Unique KIGO-XXXXXX ID lookup registry."
+    },
+    "/friendRequests/{requestId}": {
+      "schema": { "$ref": "#/entities/FriendRequest" },
+      "description": "Friend requests scoped to sender and recipient."
+    },
+    "/friendships/{friendshipId}": {
+      "schema": { "$ref": "#/entities/Friendship" },
+      "description": "Confirmed friendships between two users."
+    },
+    "/conversations/{conversationId}": {
+      "schema": { "$ref": "#/entities/Conversation" },
+      "description": "Direct and group chat conversations."
+    },
+    "/conversations/{conversationId}/messages/{messageId}": {
+      "schema": { "$ref": "#/entities/Message" },
+      "description": "Paginated real-time messages inside a conversation."
+    },
+    "/groups/{groupId}": {
+      "schema": { "$ref": "#/entities/Group" },
+      "description": "Group definitions and admin/privacy settings."
+    },
+    "/groups/{groupId}/members/{memberId}": {
+      "schema": { "$ref": "#/entities/GroupMember" },
+      "description": "Group member records."
+    },
+    "/notifications/{notificationId}": {
+      "schema": { "$ref": "#/entities/NotificationItem" },
+      "description": "User notification feed."
+    },
+    "/userSettings/{userId}": {
+      "schema": { "$ref": "#/entities/UserSettings" },
+      "description": "Customisation Studio and app settings."
+    },
+    "/blockedUsers/{blockId}": {
+      "schema": { "$ref": "#/entities/BlockedUser" },
+      "description": "Blocked user records per owner."
+    },
+    "/reports/{reportId}": {
+      "schema": { "$ref": "#/entities/UserReport" },
+      "description": "Abuse and spam reports."
+    }
+  }
+}
